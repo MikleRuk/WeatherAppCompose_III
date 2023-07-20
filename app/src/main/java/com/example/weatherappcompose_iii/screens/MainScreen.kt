@@ -4,6 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -39,7 +41,9 @@ fun MainScreen() {
             .padding(5.dp)
     ) {
         Card(
-            modifier = androidx.compose.ui.Modifier.fillMaxWidth(),
+            modifier = androidx.compose.ui.Modifier
+                .fillMaxWidth()
+                .alpha(0.9f),
             backgroundColor = Bluelight,
             elevation = 0.dp,
             shape = RoundedCornerShape(10.dp)
@@ -66,8 +70,74 @@ fun MainScreen() {
                         contentDescription = "im2",
                         modifier = androidx.compose.ui.Modifier
                             .size(35.dp)
-                            .padding(top = 3.dp, end = 8.dp)
+                            .padding(top = 3.dp, end = 3.dp)
                     )
+
+                }
+
+                Text(
+                    modifier = androidx.compose.ui.Modifier,
+                    text = "Madrid",
+                    style = TextStyle(fontSize = 24.sp),
+                    color = Color.White
+                )
+
+                Text(
+                    modifier = androidx.compose.ui.Modifier,
+                    text = "65° C",
+                    style = TextStyle(fontSize = 65.sp),
+                    color = Color.White
+                )
+
+                Text(
+                    modifier = androidx.compose.ui.Modifier,
+                    text = "Sunny",
+                    style = TextStyle(fontSize = 16.sp),
+                    color = Color.White
+                )
+
+
+                Row(
+                    modifier = androidx.compose.ui.Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+
+                    IconButton(onClick = {
+
+                    }
+                    ) {
+
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_search),
+                            contentDescription = "im3",
+                            tint = Color.White
+                        )
+
+                    }
+
+
+
+                    Text(
+                        modifier = androidx.compose.ui.Modifier,
+                        text = "23°/ 12°C",
+                        style = TextStyle(fontSize = 16.sp),
+                        color = Color.White
+                    )
+
+
+
+                    IconButton(onClick = {
+
+                    }
+                    ) {
+
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic__sync),
+                            contentDescription = "im3",
+                            tint = Color.White
+                        )
+
+                    }
 
                 }
 
