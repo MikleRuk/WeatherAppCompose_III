@@ -20,40 +20,37 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.weatherappcompose_iii.R
-import com.example.weatherappcompose_iii.data.WeatherModule
+import com.example.weatherappcompose_iii.data.WeatherModel
 import com.example.weatherappcompose_iii.ui.theme.Bluelight
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 
 
 @Composable
-fun MainCard(currentDay : MutableState<WeatherModule>) {
+fun MainCard(currentDay: MutableState<WeatherModel>) {
     Column(
         modifier = Modifier
             .padding(5.dp)
     ) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .alpha(0.9f),
+            modifier = Modifier.fillMaxWidth(),
             backgroundColor = Bluelight,
-            elevation = 0.dp,
-            shape = RoundedCornerShape(10.dp)
+            elevation = 0.dp
         ) {
-
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-
                     Text(
-                        modifier = Modifier.padding(top = 8.dp, start = 8.dp),
                         text = currentDay.value.time,
+                        modifier = Modifier.padding(
+                            top = 8.dp,
+                            start = 8.dp
+                        ),
                         style = TextStyle(fontSize = 15.sp),
                         color = Color.White
                     )
@@ -61,91 +58,70 @@ fun MainCard(currentDay : MutableState<WeatherModule>) {
                         model = "https:" + currentDay.value.icon,
                         contentDescription = "im2",
                         modifier = Modifier
+                            .padding(
+                                top = 8.dp,
+                                end = 8.dp
+                            )
                             .size(35.dp)
-                            .padding(top = 3.dp, end = 3.dp)
                     )
-
                 }
-
                 Text(
-                    modifier = Modifier,
                     text = currentDay.value.city,
                     style = TextStyle(fontSize = 24.sp),
                     color = Color.White
                 )
-
                 Text(
-                    modifier = Modifier,
-                    text = currentDay.value.currentTemp,
+                    text = currentDay.value.currentTemp.toFloat().toInt().toString() + "ºC",
                     style = TextStyle(fontSize = 65.sp),
                     color = Color.White
                 )
-
                 Text(
-                    modifier = Modifier,
-                    text =
-                    currentDay.value.condition,
+                    text = currentDay.value.condition,
                     style = TextStyle(fontSize = 16.sp),
                     color = Color.White
                 )
-
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
+                    IconButton(
+                        onClick = {
 
-                    IconButton(onClick = {
-
-                    }
+                        }
                     ) {
-
                         Icon(
                             painter = painterResource(id = R.drawable.ic_search),
                             contentDescription = "im3",
                             tint = Color.White
                         )
-
                     }
-
-
-
                     Text(
-                        modifier = Modifier,
-                        text = "${currentDay.value.minTemp}°C/${currentDay.value.maxTemp}°C",
+                        text = "${currentDay.value
+                            .maxTemp.toFloat().toInt()}ºC/${currentDay
+                            .value.minTemp.toFloat().toInt()}ºC",
                         style = TextStyle(fontSize = 16.sp),
                         color = Color.White
                     )
+                    IconButton(
+                        onClick = {
 
-
-
-                    IconButton(onClick = {
-
-                    }
+                        }
                     ) {
-
                         Icon(
                             painter = painterResource(id = R.drawable.ic__sync),
-                            contentDescription = "im3",
+                            contentDescription = "im4",
                             tint = Color.White
                         )
-
                     }
-
                 }
-
-
             }
-
         }
     }
 }
 
-
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun TabLayout(daysList: MutableState<List<WeatherModule>>) {
-
+fun TabLayout(daysList: MutableState<List<WeatherModel>>) {
     val tabList = listOf("HOURS", "DAYS")
     val pagerState = rememberPagerState()
     val tabIndex = pagerState.currentPage
@@ -153,10 +129,12 @@ fun TabLayout(daysList: MutableState<List<WeatherModule>>) {
 
     Column(
         modifier = Modifier
-            .padding(start = 5.dp, end = 5.dp)
+            .padding(
+                start = 5.dp,
+                end = 5.dp
+            )
             .clip(RoundedCornerShape(5.dp))
     ) {
-
         TabRow(
             selectedTabIndex = tabIndex,
             indicator = { pos ->
@@ -167,7 +145,6 @@ fun TabLayout(daysList: MutableState<List<WeatherModule>>) {
             backgroundColor = Bluelight,
             contentColor = Color.White
         ) {
-
             tabList.forEachIndexed { index, text ->
                 Tab(
                     selected = false,
@@ -175,10 +152,11 @@ fun TabLayout(daysList: MutableState<List<WeatherModule>>) {
                         coroutineScope.launch {
                             pagerState.animateScrollToPage(index)
                         }
-
                     },
-                    text = { Text(text = text) })
-
+                    text = {
+                        Text(text = text)
+                    }
+                )
             }
         }
         HorizontalPager(
@@ -193,13 +171,8 @@ fun TabLayout(daysList: MutableState<List<WeatherModule>>) {
                     daysList.value
                 ) { _, item ->
                     ListItem(item)
-
                 }
-
-
             }
-
         }
-
     }
 }

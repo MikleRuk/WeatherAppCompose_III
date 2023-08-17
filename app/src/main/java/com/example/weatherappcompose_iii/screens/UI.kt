@@ -13,12 +13,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.weatherappcompose_iii.data.WeatherModule
+import com.example.weatherappcompose_iii.data.WeatherModel
+
 import com.example.weatherappcompose_iii.ui.theme.Bluelight
 
 
 @Composable
-fun ListItem(item: WeatherModule) {
+fun ListItem(item: WeatherModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()

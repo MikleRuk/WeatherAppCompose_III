@@ -1,6 +1,6 @@
 package com.example.weatherappcompose_iii.data
 
-data class WeatherModule(
+data class WeatherModel(
     val city: String,
     val time: String,
     val currentTemp: String,
