@@ -1,18 +1,18 @@
 package com.example.weatherappcompose_iii.screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.composed
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,28 +20,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.weatherappcompose_iii.R
+import com.example.weatherappcompose_iii.data.WeatherModule
 import com.example.weatherappcompose_iii.ui.theme.Bluelight
-import java.lang.reflect.Modifier
+import com.google.accompanist.pager.*
+import kotlinx.coroutines.launch
 
-@Preview(showBackground = true)
+
 @Composable
-fun MainScreen() {
-    Image(
-        painter = painterResource(id = R.drawable.bg_app),
-        contentDescription = "im1",
-        modifier = androidx.compose.ui.Modifier
-            .fillMaxSize()
-            .alpha(0.9f),
-        contentScale = ContentScale.FillBounds,
-
-        )
+fun MainCard(currentDay : MutableState<WeatherModule>) {
     Column(
-        modifier = androidx.compose.ui.Modifier
-            .fillMaxSize()
+        modifier = Modifier
             .padding(5.dp)
     ) {
         Card(
-            modifier = androidx.compose.ui.Modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .alpha(0.9f),
             backgroundColor = Bluelight,
@@ -50,25 +42,25 @@ fun MainScreen() {
         ) {
 
             Column(
-                modifier = androidx.compose.ui.Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
                 Row(
-                    modifier = androidx.compose.ui.Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
 
                     Text(
-                        modifier = androidx.compose.ui.Modifier.padding(top = 8.dp, start = 8.dp),
-                        text = "20 Jun 2023 13:00",
+                        modifier = Modifier.padding(top = 8.dp, start = 8.dp),
+                        text = currentDay.value.time,
                         style = TextStyle(fontSize = 15.sp),
                         color = Color.White
                     )
                     AsyncImage(
-                        model = "https://cdn.weatherapi.com/weather/64x64/day/116.png",
+                        model = "https:" + currentDay.value.icon,
                         contentDescription = "im2",
-                        modifier = androidx.compose.ui.Modifier
+                        modifier = Modifier
                             .size(35.dp)
                             .padding(top = 3.dp, end = 3.dp)
                     )
@@ -76,29 +68,30 @@ fun MainScreen() {
                 }
 
                 Text(
-                    modifier = androidx.compose.ui.Modifier,
-                    text = "Madrid",
+                    modifier = Modifier,
+                    text = currentDay.value.city,
                     style = TextStyle(fontSize = 24.sp),
                     color = Color.White
                 )
 
                 Text(
-                    modifier = androidx.compose.ui.Modifier,
-                    text = "65° C",
+                    modifier = Modifier,
+                    text = currentDay.value.currentTemp,
                     style = TextStyle(fontSize = 65.sp),
                     color = Color.White
                 )
 
                 Text(
-                    modifier = androidx.compose.ui.Modifier,
-                    text = "Sunny",
+                    modifier = Modifier,
+                    text =
+                    currentDay.value.condition,
                     style = TextStyle(fontSize = 16.sp),
                     color = Color.White
                 )
 
 
                 Row(
-                    modifier = androidx.compose.ui.Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
 
@@ -118,8 +111,8 @@ fun MainScreen() {
 
 
                     Text(
-                        modifier = androidx.compose.ui.Modifier,
-                        text = "23°/ 12°C",
+                        modifier = Modifier,
+                        text = "${currentDay.value.minTemp}°C/${currentDay.value.maxTemp}°C",
                         style = TextStyle(fontSize = 16.sp),
                         color = Color.White
                     )
@@ -145,5 +138,68 @@ fun MainScreen() {
             }
 
         }
+    }
+}
+
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun TabLayout(daysList: MutableState<List<WeatherModule>>) {
+
+    val tabList = listOf("HOURS", "DAYS")
+    val pagerState = rememberPagerState()
+    val tabIndex = pagerState.currentPage
+    val coroutineScope = rememberCoroutineScope()
+
+    Column(
+        modifier = Modifier
+            .padding(start = 5.dp, end = 5.dp)
+            .clip(RoundedCornerShape(5.dp))
+    ) {
+
+        TabRow(
+            selectedTabIndex = tabIndex,
+            indicator = { pos ->
+                TabRowDefaults.Indicator(
+                    Modifier.pagerTabIndicatorOffset(pagerState, pos)
+                )
+            },
+            backgroundColor = Bluelight,
+            contentColor = Color.White
+        ) {
+
+            tabList.forEachIndexed { index, text ->
+                Tab(
+                    selected = false,
+                    onClick = {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(index)
+                        }
+
+                    },
+                    text = { Text(text = text) })
+
+            }
+        }
+        HorizontalPager(
+            count = tabList.size,
+            state = pagerState,
+            modifier = Modifier.weight(1.0f)
+        ) { index ->
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                itemsIndexed(
+                    daysList.value
+                ) { _, item ->
+                    ListItem(item)
+
+                }
+
+
+            }
+
+        }
+
     }
 }
